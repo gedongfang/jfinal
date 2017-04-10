@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>flv.js demo</title>
+
+    <style>
+        .mainContainer {
+            display: block;
+            width: 870px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .urlInput {
+            display: block;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .centeredVideo {
+            display: block;
+            width: 100%;
+            height: 460px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: auto;
+        }
+
+        .controls {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="mainContainer">
+        <video name="videoElement" class="centeredVideo" controls autoplay width="870px" height="460px">
+            Your browser is too old which doesn't support HTML5 video.
+        </video>
+    </div>
+
+    <script src="../js/flv.min.js"></script>
+    
+    <script>
+    	//http://45.62.98.3/flv/13-1.flv
+        function flv_load() {
+            console.log('isSupported: ' + flvjs.isSupported());
+            var element = document.getElementsByName('videoElement')[0];
+            flvPlayer = flvjs.createPlayer({
+	            type: 'flv',
+	            url: 'http://45.62.98.3/flv/13-1.flv'
+	        });
+	        flvPlayer.attachMediaElement(element);
+	        flvPlayer.load();
+	        flvPlayer.play();
+	        setTimeout("flvPlayer.pause();",1000);
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            flv_load();
+        });
+    </script>
+</body>
+
+</html>

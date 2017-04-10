@@ -1,0 +1,48 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link type="text/css" rel='stylesheet' href="../css/bootstrap.min.css">
+<link type="text/css" rel='stylesheet' href="../js/fancybox/jquery.fancybox.css">
+<link type="text/css" data-themecolor="default" rel='stylesheet' href="../css/main-default.css">
+<link type="text/css" rel='stylesheet' href="../css/font-awesome.min.css">
+<script src="../js/jquery/jquery.min.js"></script>
+<div>
+<div style="position: fixed;">123123123123123123123123123123123123123</div>
+<div style="float:left;width:15%">&nbsp;</div>
+<div style="float:left;width:65%;text-align: center">
+	<textarea id="title" name="content" style="width:69%;height:30px">title</textarea><br /><br />
+    <textarea id="author" name="content" style="width:69%;height:30px">author</textarea><br /><br />
+    <textarea id="author_url" name="content" style="width:69%;height:30px">author_url</textarea><br /><br />
+    <textarea id="essay_url" name="content" style="width:69%;height:30px">essay_url</textarea><br /><br />
+    <textarea id="date" name="content" style="width:69%;height:30px">date</textarea><br /><br />
+    &nbsp;<textarea id="detail" name="content" style="width:70%;height:1500px"></textarea>
+    <br /><button onclick="addBlog()">提交</button>
+</div>
+</div>
+<script>
+    function addBlog(param){
+        var title = document.getElementById("title").value;
+        var author = document.getElementById("author").value;
+        var author_url = document.getElementById("author_url").value;
+        var essay_url = document.getElementById("essay_url").value;
+        var date = document.getElementById("date").value;
+
+        var detail = document.getElementById("detail").value;
+
+            $.ajax({ 
+                url:'/blog/addBlog',
+                type:"post",
+                data:{"title":title,"detail":detail,"author":author,"author_url":author_url,"essay_url":essay_url,"date":date},
+                dataType:"json",
+                success:function(ret){
+                   console.log(ret);
+                },error:function(ret){
+                  console.log(ret);
+                }
+            });
+        }
+</script>
+
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/modules/color-themes.js"></script>
+<script src="../js/fancybox/jquery.fancybox.js"></script>
+<script src="../js/cookie.js"></script>
