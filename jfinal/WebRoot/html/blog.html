@@ -1,0 +1,143 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link type="text/css" rel='stylesheet' href="../css/bootstrap.min.css">
+<link type="text/css" rel='stylesheet' href="../js/fancybox/jquery.fancybox.css">
+<link type="text/css" data-themecolor="default" rel='stylesheet' href="../css/main-default.css">
+<link type="text/css" rel='stylesheet' href="../css/font-awesome.min.css">
+<script src="../js/jquery/jquery.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/vue-resource.min.js"></script>
+<script src="../js/vue/blog.js"></script>
+<div id="example" class="l-main-container">
+<div>
+<vm-head :value="headValue" v-on:headfunction="goHome()"></vm-head>
+</div>
+<div>
+    <div class="l-inner-page-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-md-push-3">
+
+                    <vm-blog v-for="blog in blogs" :title="blog.title" :author="blog.author" :author_url="blog.author_url" :essay_url="blog.essay_url" :detail="blog.detail" blogs="true" v-on:show_blog="showBlog(blog)"></vm-blog>
+
+                    <div class="b-pagination f-pagination" :style="pageSelectedStyle">
+                        <ul>
+                            <li><a v-on:click="setPageNo(1)">First</a></li>
+                            <li><a class="prev" v-on:click="setPageNo(pageNo-1)"><i class="fa fa-angle-left"></i></a></li>
+                            <li is="vm-foot" v-for="(item,index) in pageLiClass" :index="index+1" :page_li_class="item" v-on:set_page_no="setPageNo(index+1)"></li>
+                            <li><a class="next" v-on:click="setPageNo(pageNo+1)"><i class="fa fa-angle-right"></i></a></li>
+                            <li><a v-on:click="setPageNo(100)">Last</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-md-pull-9">                
+                    <div class="row b-col-default-indent col-md-12-custom">
+                        <div class="col-md-12 ">
+                            <div class="b-categories-filter">
+                                <h4 class="f-primary-b b-h4-special f-h4-special--gray f-h4-special">blog list</h4>
+                                <ul>
+                                    <li is="vm-left" v-for="blog in blogList" :title="blog.title" :date="blog.date" v-on:show_blog="showBlog(blog)" ></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+                                    
+                
+<script type="text/javascript">
+    // 创建根实例
+    var vm = new Vue({
+      el: '#example',
+      data:{
+        headValue:"",
+        headerFooter:true,
+        blogs:[],
+        blogList:[],
+        pageNo:1,
+        pagesize:3,
+        homeStyle:"",
+        pageSelectedStyle:"display:none",
+        pageLiClass:[],
+      },
+      mounted:function(){
+        this.getBlogList(function(){
+            vm.setPageNo(1)
+        });
+      },
+      methods:{
+        setPageNo:function(num){
+            var max = Math.ceil(this.blogList.length/this.pagesize);
+            if(num>max)
+                num = max;
+            this.pageNo=num;
+            for(var i=0;i<max;i++){
+                if(num-1==i)
+                    this.pageLiClass[i]="is-active-pagination";
+                else
+                    this.pageLiClass[i]="";
+            }
+            console.log(this.pageLiClass);
+            this.$http.get('/blog/getBlogs', {params:{pagesize:this.pagesize,pageNo:this.pageNo}}).then(function(response){ 
+                this.blogs=response.body;
+                setTimeout("iframeAdapt();",1);
+            }, function(response){    
+                   console.log("error");
+            });
+        },
+        getBlogList:function(callback){
+            this.$http.get('/blog/getBlogList', {}).then(function(response){ 
+                this.blogList=response.body;
+                if(this.blogList.length>this.pagesize)
+                    this.pageSelectedStyle="";
+                callback();
+                setTimeout("iframeAdapt();",1);
+            }, function(response){    
+                   console.log("error");
+            });
+        },
+        goHome:function(){
+            if(this.headerFooter){
+                parent.header_footer_hide();
+                this.headValue="Full screen";
+            }else{
+                parent.header_footer_show();
+                this.headValue="";
+            }
+            this.headerFooter=!this.headerFooter;
+            //setTimeout("iframeAdapt();",1);
+        },
+        showBlog:function(blog){
+           parent.location.href='/blog/show/'+blog.id;
+        }
+      }
+    })
+</script>
+
+<script type="text/javascript">
+    function calcPageHeight(doc) {
+        var height  = Math.max(doc.clientHeight, doc.scrollHeight);
+        return height;
+    }
+    function iframeAdapt(){
+        var height = calcPageHeight(document.getElementById("example"));
+        if(height>parent.iframe_height)
+            parent.document.getElementById('iframeId').style.height = height + 'px' ;
+        else
+            parent.document.getElementById('iframeId').style.height = parent.iframe_height + 'px' ;
+    }
+    window.onload = function() {
+            iframeAdapt();
+    }
+</script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/modules/color-themes.js"></script>
+<script src="../js/fancybox/jquery.fancybox.js"></script>
+<script src="../js/cookie.js"></script>

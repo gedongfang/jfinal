@@ -1,0 +1,40 @@
+<meta charset="utf-8">
+
+
+<div id="main">
+	建设中
+</div>
+<script>
+	// if (window.innerHeight) 
+ //        winHeight = window.innerHeight; 
+ //    else if ((document.body) && (document.body.clientHeight)) 
+ //        winHeight = document.body.clientHeight; 
+ //    document.getElementById("main").style.height= winHeight+"px";
+</script>
+<script type="text/javascript">
+   // function calcPageHeight(doc) {
+   //      var height  = Math.max(doc.clientHeight, doc.scrollHeight);
+   //      return height
+   //  }
+   //  function iframeAdapt(){
+   //      var height = calcPageHeight(document.getElementById("main"))
+   //          parent.document.getElementById('iframeId').style.height = height + 'px' ;
+   //  }
+   //  window.onload = function() {
+   //         iframeAdapt();
+   //  }
+    function calcPageHeight(doc) {
+        var height  = Math.max(doc.clientHeight, doc.scrollHeight);
+        return height;
+    }
+    function iframeAdapt(){
+        var height = calcPageHeight(document.getElementById("main"));
+        if(height>parent.iframe_height)
+            parent.document.getElementById('iframeId').style.height = height + 'px' ;
+        else
+            parent.document.getElementById('iframeId').style.height = parent.iframe_height + 'px' ;
+    }
+    window.onload = function() {
+            iframeAdapt();
+    }
+</script>
